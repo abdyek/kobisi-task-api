@@ -1,0 +1,14 @@
+{
+    "name": "kobisi/company-service",
+    "autoload": {
+        "psr-4": {
+            "Kobisi\\CompanyService\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yunus Emre Bulut",
+            "email": "yunusemrebulut123@gmail.com"
+        }
+    ]
+}
