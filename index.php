@@ -7,12 +7,52 @@ error_reporting(E_ALL);
 require 'vendor/autoload.php';
 require 'config.php';
 
+use Buki\Router\Router;
 use DI\Container;
 
-$container = new Container();
+$router = new Router;
 
-$controller = $container->get('Kobisi\CompanyService\Controller\ExampleController');
+const PREFIX = 'Kobisi\CompanyService\Controller\\';
+const ROUTES = [
+    [
+        'method' => 'post',
+        'path' => 'company/register',
+        'controller' => 'CompanyController',
+        'actionMethod' => 'register',
+    ],
+    [
+        'method' => 'post',
+        'path' => 'company/login',
+        'controller' => 'CompanyController',
+        'actionMethod' => 'login'
+    ],
+    [
+        'method' => 'get',
+        'path' => 'company/check',
+        'controller' => 'CompanyController',
+        'actionMethod' => 'check'
+    ],
+    [
+        'method' => 'get',
+        'path' => 'package',
+        'controller' => 'PackageController',
+        'actionMethod' => 'showPackages'
+    ],
+    [
+        'method' => 'post',
+        'path' => 'package',
+        'controller' => 'PackageController',
+        'actionMethod' => 'set'
+    ]
+];
 
-$controller->getEndpoint()->setConfig($config);
+foreach(ROUTES as $route) {
+    $router->{$route['method']}('/api/' . $route['path'], function() use ($config, $route) {
+        $container = new Container;
+        $controller = $container->get(PREFIX . $route['controller']);
+        $controller->getEndpoint()->setConfig($config);
+        $controller->run($route['actionMethod']);
+    });
+}
 
-$controller->run('create');
+$router->run();
