@@ -20,7 +20,6 @@ class CompanyController extends DefaultController
     public function register(): void
     {
         $content = $this->endpoint->getRequest()->getContent();
-        $config = $this->endpoint->getConfig();
         $response = $this->endpoint->getResponse();
 
         $company = $this->companyModel->getByEmail($content['email']);
@@ -52,8 +51,24 @@ class CompanyController extends DefaultController
 
     public function login(): void
     {
-        $this->endpoint->getResponse()->setContent([
-            'message' => 'here is going to be login'
+        $content = $this->endpoint->getRequest()->getContent();
+        $response = $this->endpoint->getResponse();
+
+        $company = $this->companyModel->getByEmail($content['email']);
+        if(!$company or !password_verify($content['password'], $company['password'])) {
+            $response->unauthorized();
+        }
+
+        $JWTObject = $this->endpoint->getAuthenticator()->getJWTObject();
+        $JWTObject->setClaims([
+            'exp' => time() + 3600,
+            'who' => 'authenticated',
+            'companyId' => $company['id']
+        ]);
+
+        $response->setContent([
+            'token' => $JWTObject->generateToken(),
+            'company_id' => $company['id']
         ]);
     }
 

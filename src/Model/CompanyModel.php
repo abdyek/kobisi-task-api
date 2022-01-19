@@ -13,7 +13,7 @@ class CompanyModel extends DefaultModel
 
     public function getByEmail(string $email): ?array
     {
-        return $this->database->getRow('SELECT id FROM companies WHERE email = ?', [$email]);
+        return $this->database->getRow('SELECT * FROM companies WHERE email = ?', [$email]);
     }
 
 }
