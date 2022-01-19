@@ -2,20 +2,40 @@
 
 namespace Kobisi\CompanyService\Core;
 
-use Firebase\JWT\JWT;
+use Firebase\JWT\JWT as FirebaseJWT;
 use Firebase\JWT\Key;
 use Kobisi\CompanyService\Core\Core;
+use Kobisi\CompanyService\Service\JWT;
 
 class Authenticator extends Core
 {
-    private ?int $userId;
+    private JWT $JWTObject;
+    private ?int $companyId;
     private ?string $who = null;
-    private ?array $payload;
+    private ?array $payload = null;
+
+    public function __construct(JWT $JWTObject)
+    {
+        $this->JWTObject = $JWTObject;
+    }
 
     public function check(string $controllerName, string $actionMethod): bool
     {
-        $this->solveJWT();
-        $authorization = $this->endpoint->getConfig()->getAuthorization();
+        $config = $this->endpoint->getConfig();
+        $content = $this->endpoint->getRequest()->getContent();
+
+        $this->JWTObject->setSecretKey($config->getSecret());
+        $payload = $this->JWTObject->payload(isset($content['token']) ? $content['token']: '');
+        if($payload === null) {
+            $this->companyId = null;
+            $this->who = 'guest';
+            $this->payload = null;
+        } else {
+            $this->companyId = $payload['companyId'];
+            $this->who = $payload['who'];
+            $this->payload = $payload;
+        }
+        $authorization = $config->getAuthorization();
         $authorizationKeys = array_keys($authorization);
         if(!in_array($controllerName, $authorizationKeys)) {
             return true;
@@ -30,24 +50,19 @@ class Authenticator extends Core
         return false;
     }
 
-    private function solveJWT(): void
+    public function getJWTObject(): JWT
     {
-        $token = $this->endpoint->getRequest()->getToken();
-        $secret = $this->endpoint->getConfig()->getSecret();
-        try {
-            $this->payload = (array) JWT::decode($token, new Key($secret, 'HS256'));
-            $this->userId = $this->payload['userId'];
-            $this->who = $this->payload['who'];
-        } catch(\UnexpectedValueException $e) {
-            $this->userId = null;
-            $this->who = 'guest';
-            $this->payload = null;
-        }
+        return $this->JWTObject;
     }
 
-    public function getUserId(): ?int
+    public function setJWTObject(JWT $JWTObject): void
     {
-        return $this->userId;
+        $this->JWTObject = $JWTObject;
+    }
+
+    public function getCompanyId(): ?int
+    {
+        return $this->companyId;
     }
     
 }

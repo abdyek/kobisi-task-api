@@ -76,6 +76,15 @@ $config->setRequiredMap([
                     'max' => 50
                 ]
             ]
+        ],
+        'check' => [
+            'token' => [
+                'type' => 'str',
+                'limits' => [
+                    'min' => 1,
+                    'max' => 1000
+                ]
+            ]
         ]
     ],
     'PackageController' => [

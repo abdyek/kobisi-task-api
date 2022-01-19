@@ -13,7 +13,7 @@ class Validator extends Core
         if(!(isset($requiredMap[$controllerName]) and isset($requiredMap[$controllerName][$actionMethod]))) {
             return true;
         }
-        if(!$this->checkRequired($request->getData(), $requiredMap[$controllerName][$actionMethod])) {
+        if(!$this->checkRequired($request->getContent(), $requiredMap[$controllerName][$actionMethod])) {
             return false;
         }
         return true;

@@ -27,7 +27,7 @@ const ROUTES = [
         'actionMethod' => 'login'
     ],
     [
-        'method' => 'get',
+        'method' => 'post',
         'path' => 'company/check',
         'controller' => 'CompanyController',
         'actionMethod' => 'check'

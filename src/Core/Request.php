@@ -7,7 +7,7 @@ use Kobisi\CompanyService\Core\Core;
 class Request extends Core
 {
     private $method;
-    private $data;
+    private array $content;
     private $token;
     private $dataInUrl;
 
@@ -24,7 +24,7 @@ class Request extends Core
         return $this->method;
     }
 
-    public function getData(): array
+    public function getContent(): array
     {
         return $this->data;
     }

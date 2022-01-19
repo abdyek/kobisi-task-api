@@ -20,8 +20,7 @@ class Response extends Core
         header('Content-Type: application/json; charset=utf-8');
         http_response_code($this->code);
         $responseArr = [
-            'status' => 200,
-            'message' => 'success',
+            'status' => 'success',
             'content' => $this->content
         ];
         if(empty($this->content)) {
