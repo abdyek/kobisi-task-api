@@ -10,5 +10,9 @@
             "name": "Yunus Emre Bulut",
             "email": "yunusemrebulut123@gmail.com"
         }
-    ]
+    ],
+    "require": {
+        "php-di/php-di": "^6.3",
+        "firebase/php-jwt": "^5.5"
+    }
 }
