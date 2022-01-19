@@ -19,13 +19,23 @@ class CompanyController extends DefaultController
 
     public function register(): void
     {
-        // TODO: prevent data duplication
-
-        $responseContent = $this->endpoint->getRequest()->getContent();
+        $content = $this->endpoint->getRequest()->getContent();
         $config = $this->endpoint->getConfig();
-        $this->companyModel->create($responseContent);
+        $response = $this->endpoint->getResponse();
 
-        $companyId = (int) $this->companyModel->getByEmail($responseContent['email'])['id'];
+        $company = $this->companyModel->getByEmail($content['email']);
+        if($company !== null) {
+            $response->setStatus('fail');
+            $response->setContent([
+                'message' => 'this email already registered'
+            ]);
+            return;
+        }
+
+        $content['password'] = password_hash($content['password'], PASSWORD_DEFAULT);
+        $this->companyModel->create($content);
+
+        $companyId = (int) $this->companyModel->getByEmail($content['email'])['id'];
 
         $JWTObject = $this->endpoint->getAuthenticator()->getJWTObject();
         $JWTObject->setClaims([
@@ -34,7 +44,7 @@ class CompanyController extends DefaultController
             'companyId' => $companyId
         ]);
 
-        $this->endpoint->getResponse()->setContent([
+        $response->setContent([
             'token' => $JWTObject->generateToken(),
             'company_id' => $companyId
         ]);

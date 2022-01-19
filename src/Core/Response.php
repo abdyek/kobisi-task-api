@@ -12,6 +12,7 @@ class Response extends Core
     public function __construct()
     {
         $this->code = 200;
+        $this->status = 'success';
         $this->content = [];
     }
 
@@ -20,7 +21,7 @@ class Response extends Core
         header('Content-Type: application/json; charset=utf-8');
         http_response_code($this->code);
         $responseArr = [
-            'status' => 'success',
+            'status' => $this->status,
             'content' => $this->content
         ];
         if(empty($this->content)) {
@@ -76,6 +77,16 @@ class Response extends Core
     public function setCode(int $code): void
     {
         $this->code = $code;
+    }
+
+    public function getStatus(): string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): void
+    {
+        $this->status = $status;
     }
 
     public function getContent(): array
