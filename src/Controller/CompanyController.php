@@ -72,10 +72,4 @@ class CompanyController extends DefaultController
         ]);
     }
 
-    public function check(): void
-    {
-        $this->endpoint->getResponse()->setContent([
-            'message' => 'here is going to be check'
-        ]);
-    }
 }

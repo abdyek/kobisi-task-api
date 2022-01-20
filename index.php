@@ -28,8 +28,8 @@ const ROUTES = [
     ],
     [
         'method' => 'post',
-        'path' => 'company/check',
-        'controller' => 'CompanyController',
+        'path' => 'package/check',
+        'controller' => 'PackageController',
         'actionMethod' => 'check'
     ],
     [

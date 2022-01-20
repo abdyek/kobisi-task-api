@@ -70,4 +70,16 @@ class PackageController extends DefaultController
         unset($content['token']);
         $this->companyPackageModel->attachCompanyWithPackage($content);
     }
+
+    public function check(): void
+    {
+        $response = $this->endpoint->getResponse();
+        $companyId = $this->endpoint->getAuthenticator()->getCompanyId();
+        $companyPackage = $this->companyPackageModel->getByCompanyId($companyId);
+        $response->setContent([
+            'package' => $companyPackage,
+            'detail' => ($companyPackage !== null ? $this->packageModel->getById($companyPackage['package_id']) : null)
+        ]);
+    }
+
 }

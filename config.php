@@ -6,12 +6,12 @@ $config->setSecret('bu_bir_secret');
 $config->setAuthorization([
     'CompanyController' => [
         'register' => ['guest'],
-        'login' => ['guest'],
-        'check' => ['authenticated']
+        'login' => ['guest']
     ],
     'PackageController' => [
         'showAll' => ['authenticated'],
-        'set' => ['authenticated']
+        'set' => ['authenticated'],
+        'check' => ['authenticated']
     ]
 ]);
 
@@ -76,15 +76,6 @@ $config->setRequiredMap([
                     'max' => 50
                 ]
             ]
-        ],
-        'check' => [
-            'token' => [
-                'type' => 'str',
-                'limits' => [
-                    'min' => 1,
-                    'max' => 1000
-                ]
-            ]
         ]
     ],
     'PackageController' => [
@@ -101,6 +92,15 @@ $config->setRequiredMap([
                 'limits' => [
                     'min' => 1,
                     'max' => 11
+                ]
+            ]
+        ],
+        'check' => [
+            'token' => [
+                'type' => 'str',
+                'limits' => [
+                    'min' => 1,
+                    'max' => 1000
                 ]
             ]
         ]
