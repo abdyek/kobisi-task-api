@@ -7,6 +7,7 @@ error_reporting(E_ALL);
 require 'vendor/autoload.php';
 require 'config.php';
 
+use Kobisi\CompanyService\Core\Response;
 use Buki\Router\Router;
 use DI\Container;
 
@@ -54,5 +55,10 @@ foreach(ROUTES as $route) {
         $controller->run($route['actionMethod']);
     });
 }
+
+$router->error(function() {
+    $response = new Response;
+    $response->notFound();
+});
 
 $router->run();
